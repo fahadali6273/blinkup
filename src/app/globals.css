@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🌐 Global Body Styling */
+body {
+  @apply text-gray-800 bg-white font-sans;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🌈 Animated Gradient Background (multi-color) */
+.gradient-bg {
+  background: linear-gradient(
+    270deg,
+    #7e22ce,
+    #3b82f6,
+    #f59e0b,
+    #22c55e,
+    #ec4899
+  );
+  background-size: 600% 600%;
+  animation: gradientShift 18s ease infinite;
+}
+
+/* 🎨 Keyframes for gradient animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ✨ Smooth Fade-in Animation for UI */
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 💜 Primary Button Styling */
+.btn-primary {
+  @apply bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+.btn-primary:hover {
+  @apply bg-purple-800 scale-105;
+}
+
+/* 🩵 Secondary Button Styling */
+.btn-secondary {
+  @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition-all duration-200;
+}
+.btn-secondary:hover {
+  @apply bg-gray-300;
+}
+
+/* 🌟 Section Heading Style */
+.section-title {
+  @apply text-4xl font-bold text-center text-purple-700 mb-6;
+}
+
+/* 🧭 Responsive Container */
+.container {
+  @apply max-w-7xl mx-auto px-4;
+}
+
