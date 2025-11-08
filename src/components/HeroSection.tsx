@@ -42,6 +42,7 @@ export default function HeroSection() {
       });
     }, 5000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ⏱ Auto change heading
@@ -53,6 +54,7 @@ export default function HeroSection() {
       });
     }, 4000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 📍 Auto-detect location

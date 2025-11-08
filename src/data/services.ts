@@ -10,7 +10,7 @@ import {
   SparklesIcon as CleaningIcon,
   Bars3CenterLeftIcon,
   AdjustmentsVerticalIcon,
-  LeafIcon,
+  GlobeAltIcon,
   Squares2X2Icon,
   ShieldCheckIcon,
   PuzzlePieceIcon,

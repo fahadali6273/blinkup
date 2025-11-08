@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import Image from "next/image"; // ✅ added import
 
 const testimonials = [
   {
@@ -60,7 +61,7 @@ export default function TestimonialsSection() {
           Real experiences from happy BlinkUp users across India.
         </p>
 
-        {/* Testimonials Carousel */}
+        {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((t, i) => (
             <motion.div
@@ -72,14 +73,19 @@ export default function TestimonialsSection() {
               className="relative bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl border border-purple-100 p-6 flex flex-col items-center text-center hover:shadow-2xl transition-all"
             >
               <div className="w-20 h-20 rounded-full overflow-hidden mb-4 border-4 border-purple-200">
-                <img
+                {/* ✅ Replaced <img> with Next.js <Image /> */}
+                <Image
                   src={t.image}
                   alt={t.name}
+                  width={80}
+                  height={80}
                   className="object-cover w-full h-full"
                 />
               </div>
+
               <h3 className="font-semibold text-lg text-gray-800">{t.name}</h3>
               <p className="text-sm text-purple-600 mb-3">{t.role}</p>
+
               <div className="flex justify-center mb-3">
                 {Array.from({ length: t.rating }).map((_, i) => (
                   <Star
@@ -88,9 +94,11 @@ export default function TestimonialsSection() {
                   />
                 ))}
               </div>
+
               <p className="text-gray-600 text-sm italic leading-relaxed">
                 “{t.review}”
               </p>
+
               <div className="absolute -bottom-1 left-0 right-0 h-[3px] bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 rounded-full"></div>
             </motion.div>
           ))}
@@ -99,5 +107,3 @@ export default function TestimonialsSection() {
     </section>
   );
 }
-
-
