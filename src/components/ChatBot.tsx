@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 
-export default function Chatbot() {
+export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { sender: "bot", text: "👋 Hi! Main Blinku! Assistant hoon. Kaise madad kar sakta hoon aaj?" },
