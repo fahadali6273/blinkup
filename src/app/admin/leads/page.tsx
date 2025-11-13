@@ -3,28 +3,34 @@ import { useEffect, useState } from 'react';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 
+interface Lead {
+  id: string;
+  name: string;
+  service: string;
+  status: string;
+  location?: string;
+  createdAt?: any;
+}
+
 export default function LeadsPage() {
-  const [leads, setLeads] = useState<any[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     const fetchLeads = async () => {
       const snapshot = await getDocs(collection(db, 'leads'));
-      const data = snapshot.docs.map((d) => {
-        const lead = d.data();
-        // Format timestamp if available
-        const createdAt = lead.createdAt?.toDate
-          ? lead.createdAt.toDate().toLocaleString('en-IN', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            })
-          : '—';
-        return { id: d.id, ...lead, createdAt };
-      });
-      setLeads(data);
+      const leadsData = snapshot.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Lead[];
+
+      // ✅ Sort by date (latest first)
+      const sorted = leadsData.sort(
+        (a, b) =>
+          (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+      );
+
+      setLeads(sorted);
     };
     fetchLeads();
   }, []);
@@ -50,14 +56,14 @@ export default function LeadsPage() {
         onChange={(e) => setSearch(e.target.value)}
         className="border p-2 rounded w-full mb-4"
       />
-
       <table className="w-full bg-white shadow-md rounded-lg">
         <thead>
           <tr className="bg-purple-100 text-left">
             <th className="p-3">Name</th>
             <th className="p-3">Service</th>
+            <th className="p-3">Location</th>
+            <th className="p-3">Date</th>
             <th className="p-3">Status</th>
-            <th className="p-3">Date Added</th>
             <th className="p-3">Action</th>
           </tr>
         </thead>
@@ -66,20 +72,23 @@ export default function LeadsPage() {
             <tr key={lead.id} className="border-t hover:bg-gray-50">
               <td className="p-3">{lead.name}</td>
               <td className="p-3">{lead.service}</td>
+              <td className="p-3">{lead.location || '—'}</td>
+              <td className="p-3">
+                {lead.createdAt
+                  ? new Date(lead.createdAt.seconds * 1000).toLocaleString()
+                  : '—'}
+              </td>
               <td className="p-3">
                 <span
                   className={`px-3 py-1 rounded-full text-sm ${
                     lead.status === 'Completed'
                       ? 'bg-green-200 text-green-700'
-                      : lead.status === 'In Progress'
-                      ? 'bg-blue-100 text-blue-700'
                       : 'bg-yellow-100 text-yellow-700'
                   }`}
                 >
                   {lead.status || 'Pending'}
                 </span>
               </td>
-              <td className="p-3 text-sm text-gray-600">{lead.createdAt}</td>
               <td className="p-3">
                 <select
                   value={lead.status || 'Pending'}
@@ -98,3 +107,4 @@ export default function LeadsPage() {
     </div>
   );
 }
+

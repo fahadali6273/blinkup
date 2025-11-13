@@ -275,7 +275,7 @@ export default function LeadFormPage() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="bg-primary text-white px-6 py-3 rounded hover:bg-primary-dark"
+          className="bg-purple-600 text-white px-6 py-3 rounded hover:bg-purple-700"
         >
           Submit Request
         </button>
