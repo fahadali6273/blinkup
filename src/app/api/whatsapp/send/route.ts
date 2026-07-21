@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import {
-  sendWhatsAppMessage,
-  type WhatsAppMessage,
-} from '@/lib/whatsapp';
+  sendWhatsAppCloudMessage,
+  type WhatsAppCloudMessage,
+} from '@/lib/whatsapp-cloud';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,7 +14,7 @@ function isAuthorized(request: Request) {
   return Boolean(configuredKey && providedKey === configuredKey);
 }
 
-function isValidMessage(value: unknown): value is WhatsAppMessage {
+function isValidMessage(value: unknown): value is WhatsAppCloudMessage {
   if (!value || typeof value !== 'object') return false;
 
   const message = value as Record<string, unknown>;
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await sendWhatsAppMessage(body);
+    const result = await sendWhatsAppCloudMessage(body);
     return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error('WhatsApp send API error', error);
