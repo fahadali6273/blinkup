@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import {
   sendWhatsAppCloudMessage,
   type WhatsAppCloudMessage,
-} from '@/lib/whatsapp-cloud';
+} from '../../../../lib/whatsapp-cloud';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
