@@ -1,9 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import ChatBot from "../components/ChatBot";
-import MobileActionBar from "../components/MobileActionBar";
+import SiteChrome from "../components/SiteChrome";
 
 const siteUrl = "https://blinkuphome.com";
 
@@ -123,13 +120,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-        <Header />
-        <main className="relative z-10 min-h-screen pt-20">{children}</main>
-        <Footer />
-        <div className="fixed bottom-20 right-4 z-50 md:bottom-6 md:right-6">
-          <ChatBot />
-        </div>
-        <MobileActionBar />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

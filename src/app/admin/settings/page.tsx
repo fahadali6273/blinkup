@@ -1,279 +1,347 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../../../lib/firebase'
+import { useEffect, useState } from "react";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  BadgeCheck,
+  Building2,
+  Clock3,
+  Facebook,
+  Instagram,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  Save,
+  Settings,
+  Youtube,
+} from "lucide-react";
+import { db } from "../../../lib/firebase";
 
 interface SettingsForm {
-  businessName: string
-  whatsApp: string
-  phone: string
-  adminEmail: string
-  city: string
-  address: string
-  hours: string
-  facebook: string
-  instagram: string
-  youtube: string
+  businessName: string;
+  whatsApp: string;
+  phone: string;
+  adminEmail: string;
+  city: string;
+  address: string;
+  hours: string;
+  facebook: string;
+  instagram: string;
+  youtube: string;
 }
 
 const defaultSettings: SettingsForm = {
-  businessName: 'BlinkUp',
-  whatsApp: '+91 00000 00000',
-  phone: '+91 00000 00000',
-  adminEmail: '',
-  city: 'Bhopal',
-  address: 'Bhopal, Madhya Pradesh, India',
-  hours: 'Mon–Sun 9:00 AM – 9:00 PM',
-  facebook: '',
-  instagram: '',
-  youtube: '',
-}
+  businessName: "BlinkUp",
+  whatsApp: "+91 74896 73372",
+  phone: "+91 74896 73372",
+  adminEmail: "info@blinkuphome.com",
+  city: "Bhopal",
+  address: "Bhopal, Madhya Pradesh, India",
+  hours: "Monday-Sunday, 9:00 AM-9:00 PM",
+  facebook: "https://www.facebook.com/profile.php?id=61576752742431",
+  instagram: "https://www.instagram.com/blinkup.home",
+  youtube: "",
+};
 
 export default function AdminSettingsPage() {
-  const [form, setForm] = useState<SettingsForm>(defaultSettings)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState('')
+  const [form, setForm] = useState<SettingsForm>(defaultSettings);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const ref = doc(db, 'settings', 'business')
-        const snap = await getDoc(ref)
+        const reference = doc(db, "settings", "business");
+        const snapshot = await getDoc(reference);
 
-        if (snap.exists()) {
+        if (snapshot.exists()) {
           setForm({
             ...defaultSettings,
-            ...(snap.data() as Partial<SettingsForm>),
-          })
+            ...(snapshot.data() as Partial<SettingsForm>),
+          });
         }
-      } catch (error) {
-        console.error('Error loading settings:', error)
-        setMessage('Failed to load settings.')
+      } catch (fetchError) {
+        console.error("Error loading settings:", fetchError);
+        setMessage({
+          type: "error",
+          text: "Saved business settings load nahi hui.",
+        });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchSettings()
-  }, [])
+    void fetchSettings();
+  }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+    setMessage(null);
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSaving(true)
-    setMessage('')
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage(null);
 
     try {
-      const ref = doc(db, 'settings', 'business')
-
       await setDoc(
-        ref,
+        doc(db, "settings", "business"),
         {
           ...form,
           updatedAt: serverTimestamp(),
         },
         { merge: true }
-      )
+      );
 
-      setMessage('✅ Settings saved successfully.')
-    } catch (error) {
-      console.error('Error saving settings:', error)
-      setMessage('❌ Failed to save settings. Please try again.')
+      setMessage({
+        type: "success",
+        text: "Business settings saved successfully.",
+      });
+    } catch (saveError) {
+      console.error("Error saving settings:", saveError);
+      setMessage({
+        type: "error",
+        text: "Settings save nahi hui. Please retry.",
+      });
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow p-6">
-        <p className="text-gray-500">Loading settings...</p>
+      <div className="flex min-h-72 items-center justify-center gap-3 rounded-[1.75rem] border border-white/[0.08] bg-[#15101d] text-sm text-[#8f8498]">
+        <Loader2 size={20} className="animate-spin text-[#8f65f5]" />
+        Loading business settings...
       </div>
-    )
+    );
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-          Website Settings
-        </h1>
-        <p className="text-gray-500 mt-1">
-          Manage BlinkUp business details used across website and admin panel.
+    <div className="space-y-6">
+      <section className="rounded-[1.75rem] border border-white/[0.08] bg-[#15101d] p-5 sm:p-7">
+        <p className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#9b77f7]">
+          <Settings size={14} />
+          Business configuration
         </p>
-      </div>
+        <h2 className="mt-3 text-3xl font-bold tracking-[-0.045em]">
+          Keep business details organized.
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-[#9f94a8]">
+          Contact information, working hours aur social profiles ka admin
+          reference record.
+        </p>
+      </section>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Field
-            label="Business Name"
-            name="businessName"
-            value={form.businessName}
-            onChange={handleChange}
-            placeholder="BlinkUp"
-          />
-
-          <Field
-            label="Service City"
-            name="city"
-            value={form.city}
-            onChange={handleChange}
-            placeholder="Bhopal"
-          />
-
-          <Field
-            label="WhatsApp Number"
-            name="whatsApp"
-            value={form.whatsApp}
-            onChange={handleChange}
-            placeholder="+91 98765 43210"
-          />
-
-          <Field
-            label="Website Phone Number"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            placeholder="+91 98765 43210"
-          />
-
-          <Field
-            label="Admin Email"
-            name="adminEmail"
-            value={form.adminEmail}
-            onChange={handleChange}
-            placeholder="info@blinkup.in"
-            type="email"
-          />
-
-          <Field
-            label="Business Hours"
-            name="hours"
-            value={form.hours}
-            onChange={handleChange}
-            placeholder="Mon–Sun 9:00 AM – 9:00 PM"
-          />
+      {message && (
+        <div
+          className={`rounded-2xl border p-4 text-sm ${
+            message.type === "success"
+              ? "border-emerald-300/15 bg-emerald-300/[0.07] text-emerald-200"
+              : "border-rose-300/15 bg-rose-300/[0.07] text-rose-200"
+          }`}
+          role="status"
+        >
+          {message.text}
         </div>
+      )}
 
-        <div>
-          <label className="block font-medium mb-1 text-gray-700">
-            Business Address
-          </label>
-          <textarea
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-            rows={3}
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            placeholder="Bhopal, Madhya Pradesh, India"
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <section className="rounded-[1.75rem] border border-white/[0.08] bg-[#15101d] p-5 sm:p-7">
+          <div className="flex items-start gap-4">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#6d3ae6]/15 text-[#b99cff]">
+              <Building2 size={22} />
+            </span>
+            <div>
+              <h3 className="text-xl font-bold">Business identity</h3>
+              <p className="mt-1 text-xs leading-5 text-[#806f89]">
+                Core details used for internal administration.
+              </p>
+            </div>
+          </div>
 
-        <div className="border-t pt-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Social Links
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
             <Field
+              icon={<Building2 size={15} />}
+              label="Business name"
+              name="businessName"
+              value={form.businessName}
+              onChange={handleChange}
+              placeholder="BlinkUp"
+            />
+            <Field
+              icon={<MapPin size={15} />}
+              label="Service city"
+              name="city"
+              value={form.city}
+              onChange={handleChange}
+              placeholder="Bhopal"
+            />
+            <Field
+              icon={<Phone size={15} />}
+              label="WhatsApp number"
+              name="whatsApp"
+              value={form.whatsApp}
+              onChange={handleChange}
+              placeholder="+91 74896 73372"
+            />
+            <Field
+              icon={<Phone size={15} />}
+              label="Call number"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="+91 74896 73372"
+            />
+            <Field
+              icon={<Mail size={15} />}
+              label="Admin email"
+              name="adminEmail"
+              value={form.adminEmail}
+              onChange={handleChange}
+              placeholder="info@blinkuphome.com"
+              type="email"
+            />
+            <Field
+              icon={<Clock3 size={15} />}
+              label="Business hours"
+              name="hours"
+              value={form.hours}
+              onChange={handleChange}
+              placeholder="Monday-Sunday, 9 AM-9 PM"
+            />
+          </div>
+
+          <label className="mt-4 block">
+            <span className="mb-2 flex items-center gap-2 text-xs font-bold text-[#c9becf]">
+              <MapPin size={15} className="text-[#8f65f5]" />
+              Business address
+            </span>
+            <textarea
+              name="address"
+              value={form.address}
+              onChange={handleChange}
+              rows={3}
+              className="field min-h-28 resize-y"
+              placeholder="Bhopal, Madhya Pradesh, India"
+            />
+          </label>
+        </section>
+
+        <section className="rounded-[1.75rem] border border-white/[0.08] bg-[#15101d] p-5 sm:p-7">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#806f89]">
+              Brand presence
+            </p>
+            <h3 className="mt-2 text-xl font-bold">Social profiles</h3>
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-3">
+            <Field
+              icon={<Facebook size={15} />}
               label="Facebook"
               name="facebook"
               value={form.facebook}
               onChange={handleChange}
               placeholder="https://facebook.com/..."
+              type="url"
             />
-
             <Field
+              icon={<Instagram size={15} />}
               label="Instagram"
               name="instagram"
               value={form.instagram}
               onChange={handleChange}
               placeholder="https://instagram.com/..."
+              type="url"
             />
-
             <Field
+              icon={<Youtube size={15} />}
               label="YouTube"
               name="youtube"
               value={form.youtube}
               onChange={handleChange}
               placeholder="https://youtube.com/..."
+              type="url"
             />
           </div>
-        </div>
+        </section>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-col justify-between gap-4 rounded-[1.5rem] border border-[#8f65f5]/15 bg-[#6d3ae6]/[0.07] p-5 sm:flex-row sm:items-center">
+          <div className="flex items-start gap-3">
+            <BadgeCheck
+              size={19}
+              className="mt-0.5 shrink-0 text-[#b99cff]"
+            />
+            <p className="max-w-2xl text-xs leading-6 text-[#b8acbf]">
+              Ye settings admin record mein save hoti hain. Public website ke
+              hardcoded contact details change karne ke liye deployment update
+              bhi required hoga.
+            </p>
+          </div>
           <button
             type="submit"
             disabled={saving}
-            className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="button-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {saving ? 'Saving...' : 'Save Settings'}
+            {saving ? (
+              <>
+                <Loader2 size={17} className="animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save size={17} />
+                Save settings
+              </>
+            )}
           </button>
-
-          {message && (
-            <p
-              className={`text-sm font-medium ${
-                message.startsWith('✅') ? 'text-green-600' : 'text-red-600'
-              }`}
-            >
-              {message}
-            </p>
-          )}
         </div>
       </form>
-
-      <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-4 text-sm text-yellow-800">
-        <strong>Note:</strong> Admin email yahan save ho jayega, lekin actual
-        email notification bhejne ke liye Gmail/App Password aur Vercel
-        Environment Variables baad me setup karne honge.
-      </div>
     </div>
-  )
+  );
 }
 
 function Field({
+  icon,
   label,
   name,
   value,
   onChange,
   placeholder,
-  type = 'text',
+  type = "text",
 }: {
-  label: string
-  name: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  placeholder?: string
-  type?: string
+  icon: React.ReactNode;
+  label: string;
+  name: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  type?: string;
 }) {
   return (
-    <div>
-      <label className="block font-medium mb-1 text-gray-700" htmlFor={name}>
+    <label className="block">
+      <span className="mb-2 flex items-center gap-2 text-xs font-bold text-[#c9becf]">
+        <span className="text-[#8f65f5]">{icon}</span>
         {label}
-      </label>
+      </span>
       <input
-        id={name}
         name={name}
         type={type}
         value={value}
         onChange={onChange}
-        className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        className="field"
         placeholder={placeholder}
       />
-    </div>
-  )
+    </label>
+  );
 }

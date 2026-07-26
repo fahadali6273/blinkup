@@ -2,8 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { ArrowRight, BadgeCheck, Quote, Star, Users } from "lucide-react";
-import { testimonials } from "../data/testimonials";
+import { db } from "../lib/firebase";
+import {
+  testimonials,
+  type Testimonial,
+} from "../data/testimonials";
 
 interface TestimonialsSectionProps {
   showAll?: boolean;
@@ -12,7 +18,53 @@ interface TestimonialsSectionProps {
 export default function TestimonialsSection({
   showAll = false,
 }: TestimonialsSectionProps) {
-  const visibleReviews = showAll ? testimonials : testimonials.slice(0, 3);
+  const [verifiedReviews, setVerifiedReviews] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    const fetchVerifiedReviews = async () => {
+      try {
+        const reviewQuery = query(
+          collection(db, "testimonials"),
+          where("approved", "==", true)
+        );
+        const snapshot = await getDocs(reviewQuery);
+        const liveReviews = snapshot.docs
+          .map((document) => {
+            const data = document.data();
+            const createdAt = data.createdAt?.seconds
+              ? data.createdAt.seconds * 1000
+              : 0;
+
+            return {
+              id: document.id,
+              name: data.name || "BlinkUp Customer",
+              city: data.city || "Bhopal",
+              service: data.service || "Home Service",
+              rating: Math.min(5, Math.max(1, Number(data.rating) || 5)),
+              review: data.review || data.feedback || "",
+              verified: true,
+              createdAt,
+            };
+          })
+          .filter((review) => review.review)
+          .sort((a, b) => b.createdAt - a.createdAt)
+          .map(({ createdAt: _createdAt, ...review }) => review);
+
+        setVerifiedReviews(liveReviews);
+      } catch (error) {
+        console.error("Verified review fetch error:", error);
+      }
+    };
+
+    void fetchVerifiedReviews();
+  }, []);
+
+  const allReviews = useMemo(
+    () => [...verifiedReviews, ...testimonials],
+    [verifiedReviews]
+  );
+  const visibleReviews = showAll ? allReviews : allReviews.slice(0, 3);
+  const hasVerifiedReviews = verifiedReviews.length > 0;
   return (
     <section
       id="reviews"
@@ -24,18 +76,20 @@ export default function TestimonialsSection({
           <div className="max-w-3xl">
             <p className="section-kicker">
               <BadgeCheck size={13} />
-              Customer review preview
+              {hasVerifiedReviews ? "Verified customer reviews" : "Customer review preview"}
             </p>
             <h2
               id="customer-reviews-title"
               className="mt-4 text-3xl font-bold tracking-[-0.045em] sm:text-5xl"
             >
-              Bhopal customer reviews ke liye trust-ready section.
+              {hasVerifiedReviews
+                ? "Bhopal customers ka verified BlinkUp experience."
+                : "Bhopal customer reviews ke liye trust-ready section."}
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-[#bdb2c5]">
-              Ye sample review content layout preview ke liye hai. Real
-              booking-verified feedback approval ke baad isi section mein
-              publish hoga.
+              {hasVerifiedReviews
+                ? "Real booking feedback, admin verification ke baad publish kiya gaya hai. Sample cards sirf layout preview ke liye clearly marked hain."
+                : "Ye sample review content layout preview ke liye hai. Real booking-verified feedback approval ke baad isi section mein publish hoga."}
             </p>
           </div>
 
@@ -44,9 +98,13 @@ export default function TestimonialsSection({
               <Star size={24} fill="currentColor" />
             </span>
             <div>
-              <p className="text-xl font-bold">Review-ready</p>
+              <p className="text-xl font-bold">
+                {hasVerifiedReviews ? `${verifiedReviews.length} verified` : "Review-ready"}
+              </p>
               <p className="text-xs text-[#a99dad]">
-                {testimonials.length} sample experience cards
+                {hasVerifiedReviews
+                  ? "Real customer experiences"
+                  : `${testimonials.length} sample experience cards`}
               </p>
             </div>
           </div>
