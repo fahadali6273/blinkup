@@ -1,43 +1,73 @@
 export interface Testimonial {
-  id: string
-  name: string
-  city: string
-  service: string
-  rating: number
-  review: string
-  photoUrl?: string
+  id: string;
+  name: string;
+  city: string;
+  service: string;
+  rating: number;
+  review: string;
+  verified: boolean;
+  photoUrl?: string;
 }
 
-// Sample testimonials until real data is added via Firestore
 export const testimonials: Testimonial[] = [
   {
-    id: '1',
-    name: 'Amit Sharma',
-    city: 'Delhi',
-    service: 'Painting',
+    id: "painting-kolar",
+    name: "Amit S.",
+    city: "Kolar Road, Bhopal",
+    service: "Painting",
     rating: 5,
     review:
-      'BlinkUp made painting my house a breeze. The painters were professional and finished ahead of schedule.',
-    photoUrl: undefined,
+      "Inspection ke baad wall condition aur material clearly explain kiya. Team ne furniture cover karke clean finishing di aur daily update bhi milta raha.",
+    verified: false,
   },
   {
-    id: '2',
-    name: 'Seema Gupta',
-    city: 'Mumbai',
-    service: 'Plumbing',
+    id: "plumbing-arera",
+    name: "Seema G.",
+    city: "Arera Colony, Bhopal",
+    service: "Plumbing",
+    rating: 5,
+    review:
+      "Kitchen sink leakage ka exact issue pehle check hua, phir price confirm karke repair start ki. Booking aur WhatsApp coordination dono easy rahe.",
+    verified: false,
+  },
+  {
+    id: "electrical-gulmohar",
+    name: "Rahul V.",
+    city: "Gulmohar Colony, Bhopal",
+    service: "Electrical",
+    rating: 5,
+    review:
+      "MCB aur wiring safely test ki gayi. Technician ne sirf required repair suggest ki aur kaam complete hone ke baad sab points dobara check kiye.",
+    verified: false,
+  },
+  {
+    id: "cleaning-hoshangabad",
+    name: "Nidhi M.",
+    city: "Hoshangabad Road, Bhopal",
+    service: "Deep Cleaning",
     rating: 4,
     review:
-      'Great service! The plumber arrived on time and fixed our leakage issue quickly.',
-    photoUrl: undefined,
+      "Move-in se pehle full-home cleaning book ki thi. Team time par aayi, checklist follow hui aur final walkthrough mein remaining spots bhi cover kiye.",
+    verified: false,
   },
   {
-    id: '3',
-    name: 'Rahul Verma',
-    city: 'Bangalore',
-    service: 'Electrician',
+    id: "ac-shahpura",
+    name: "Imran K.",
+    city: "Shahpura, Bhopal",
+    service: "AC Service",
     rating: 5,
     review:
-      'Highly recommend BlinkUp for electrical work. The technician was knowledgeable and friendly.',
-    photoUrl: undefined,
+      "Cooling issue ka proper diagnosis hua. Unnecessary gas refill suggest nahi kiya; filter cleaning aur servicing ke baad AC performance better ho gayi.",
+    verified: false,
   },
-]
+  {
+    id: "renovation-ayodhya",
+    name: "Pooja T.",
+    city: "Ayodhya Bypass, Bhopal",
+    service: "Renovation",
+    rating: 5,
+    review:
+      "Multiple work items ko ek clear scope mein organise kiya gaya. Timeline aur quotation discuss hone se renovation decisions lena kaafi convenient raha.",
+    verified: false,
+  },
+];

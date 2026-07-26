@@ -1,108 +1,150 @@
 "use client";
+
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
-import Image from "next/image"; // ✅ added import
+import { ArrowRight, BadgeCheck, Quote, Star, Users } from "lucide-react";
+import { testimonials } from "../data/testimonials";
 
-const testimonials = [
-  {
-    name: "Amit Sharma",
-    role: "Home Painting - Bhopal",
-    review:
-      "BlinkUp ne mere ghar ko ekdum naya look de diya! Painters time par aaye aur finishing top class thi.",
-    rating: 5,
-    image: "/avatars/user1.jpg",
-  },
-  {
-    name: "Sneha Verma",
-    role: "Interior Design - Indore",
-    review:
-      "Unka interior design service kaafi professional hai. 3D designs ke saath perfect execution mila.",
-    rating: 5,
-    image: "/avatars/user2.jpg",
-  },
-  {
-    name: "Rahul Mehta",
-    role: "AC Repair - Bhopal",
-    review:
-      "AC service quick aur affordable thi. Technician polite aur knowledgeable the.",
-    rating: 4,
-    image: "/avatars/user3.jpg",
-  },
-  {
-    name: "Priya Singh",
-    role: "Wall Paneling - Gwalior",
-    review:
-      "Beautiful wall panels lagaye BlinkUp team ne. Har visitor poochta hai kahan se karaya!",
-    rating: 5,
-    image: "/avatars/user4.jpg",
-  },
-  {
-    name: "Vikas Patel",
-    role: "Home Renovation - Ujjain",
-    review:
-      "Pure ghar ka renovation BlinkUp ne perfectly handle kiya. High quality work with smart suggestions.",
-    rating: 5,
-    image: "/avatars/user5.jpg",
-  },
-];
+interface TestimonialsSectionProps {
+  showAll?: boolean;
+}
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection({
+  showAll = false,
+}: TestimonialsSectionProps) {
+  const visibleReviews = showAll ? testimonials : testimonials.slice(0, 3);
   return (
-    <section className="relative py-20 bg-gradient-to-br from-purple-50 via-white to-indigo-50 overflow-hidden">
-      {/* floating gradient balls */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300/20 blur-[120px] rounded-full"></div>
-      <div className="absolute bottom-0 right-0 w-72 h-72 bg-pink-300/20 blur-[120px] rounded-full"></div>
-
-      <div className="max-w-7xl mx-auto text-center relative z-10 px-6">
-        <h2 className="text-4xl font-bold text-purple-700 mb-3">
-          What Our Customers Say
-        </h2>
-        <p className="text-gray-600 mb-12">
-          Real experiences from happy BlinkUp users across India.
-        </p>
-
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
-              whileHover={{ scale: 1.03 }}
-              className="relative bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl border border-purple-100 p-6 flex flex-col items-center text-center hover:shadow-2xl transition-all"
+    <section
+      id="reviews"
+      className="scroll-mt-24 bg-[#15101d] pb-24 pt-6"
+      aria-labelledby="customer-reviews-title"
+    >
+      <div className="page-shell">
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div className="max-w-3xl">
+            <p className="section-kicker">
+              <BadgeCheck size={13} />
+              Customer review preview
+            </p>
+            <h2
+              id="customer-reviews-title"
+              className="mt-4 text-3xl font-bold tracking-[-0.045em] sm:text-5xl"
             >
-              <div className="w-20 h-20 rounded-full overflow-hidden mb-4 border-4 border-purple-200">
-                {/* ✅ Replaced <img> with Next.js <Image /> */}
-                <Image
-                  src={t.image}
-                  alt={t.name}
-                  width={80}
-                  height={80}
-                  className="object-cover w-full h-full"
-                />
+              Bhopal customer reviews ke liye trust-ready section.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#bdb2c5]">
+              Ye sample review content layout preview ke liye hai. Real
+              booking-verified feedback approval ke baad isi section mein
+              publish hoga.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4 rounded-[1.35rem] border border-white/10 bg-[#211a2b] px-5 py-4">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-400/15 text-amber-300">
+              <Star size={24} fill="currentColor" />
+            </span>
+            <div>
+              <p className="text-xl font-bold">Review-ready</p>
+              <p className="text-xs text-[#a99dad]">
+                {testimonials.length} sample experience cards
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-9 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {visibleReviews.map((review, index) => (
+            <motion.article
+              key={review.id}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              className="app-card-raised flex min-h-[20rem] flex-col p-6"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span
+                    className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#8f65f5] to-[#4b249d] text-sm font-bold text-white"
+                    aria-hidden="true"
+                  >
+                    {review.name.charAt(0)}
+                  </span>
+                  <div>
+                    <h3 className="font-bold">{review.name}</h3>
+                    <p className="mt-0.5 text-[11px] text-[#9f94a8]">
+                      {review.city}
+                    </p>
+                  </div>
+                </div>
+                <Quote size={25} className="shrink-0 text-[#8068ae]" />
               </div>
 
-              <h3 className="font-semibold text-lg text-gray-800">{t.name}</h3>
-              <p className="text-sm text-purple-600 mb-3">{t.role}</p>
-
-              <div className="flex justify-center mb-3">
-                {Array.from({ length: t.rating }).map((_, i) => (
+              <div
+                className="mt-5 flex items-center gap-1 text-amber-300"
+                aria-label={`${review.rating} out of 5 stars`}
+              >
+                {Array.from({ length: 5 }, (_, starIndex) => (
                   <Star
-                    key={i}
-                    className="w-5 h-5 text-yellow-400 fill-yellow-400"
+                    key={starIndex}
+                    size={16}
+                    fill={starIndex < review.rating ? "currentColor" : "none"}
+                    className={
+                      starIndex < review.rating
+                        ? "text-amber-300"
+                        : "text-[#5a4e64]"
+                    }
                   />
                 ))}
               </div>
 
-              <p className="text-gray-600 text-sm italic leading-relaxed">
-                “{t.review}”
-              </p>
+              <blockquote className="mt-4 flex-1 text-sm leading-7 text-[#d4cbd9]">
+                “{review.review}”
+              </blockquote>
 
-              <div className="absolute -bottom-1 left-0 right-0 h-[3px] bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 rounded-full"></div>
-            </motion.div>
+              <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/[0.07] pt-4">
+                <span className="rounded-full bg-[#6d3ae6]/15 px-3 py-1.5 text-[10px] font-bold text-[#c7b4fa]">
+                  {review.service}
+                </span>
+                {review.verified && (
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-300">
+                    <BadgeCheck size={14} />
+                    Booking verified
+                  </span>
+                )}
+                {!review.verified && (
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-[#bdb2c5]">
+                    <BadgeCheck size={14} />
+                    Sample review
+                  </span>
+                )}
+              </div>
+            </motion.article>
           ))}
         </div>
+
+        {!showAll && (
+          <div className="mt-7 flex flex-col items-start justify-between gap-4 rounded-[1.5rem] border border-white/[0.08] bg-[#211a2b] p-5 sm:flex-row sm:items-center">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#55427a] text-[#eadfff]">
+                <Users size={21} />
+              </span>
+              <div>
+                <p className="font-bold">Aur customer experiences dekhein</p>
+                <p className="mt-1 text-xs text-[#9f94a8]">
+                  Service-wise reviews aur feedback form ek hi page par.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/testimonials"
+              className="button-secondary w-full px-5 text-sm sm:w-auto"
+            >
+              View All Reviews
+              <ArrowRight size={17} />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

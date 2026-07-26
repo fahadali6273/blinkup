@@ -1,226 +1,111 @@
 "use client";
-import Link from "next/link";
-import {
-  Paintbrush,
-  Plug,
-  Wrench,
-  Hammer,
-  Home,
-  Building,
-  Wallpaper,
-  Truck,
-  Sparkles,
-  Wind,
-  Tv,
-  Shield,
-  UserCog,
-  Leaf,
-  Ruler,
-} from "lucide-react";
-import { motion } from "framer-motion";
 
-const services = [
-  {
-    name: "Painting",
-    subtitle: "Interior & exterior painting",
-    icon: Paintbrush,
-    color: "from-purple-500 to-purple-700",
-    tags: ["Interior & exterior", "Texture walls", "Putty & primer"],
-    desc: "Premium painting with luxury finish & safe eco paints.",
-    slug: "painting",
-  },
-  {
-    name: "Plumbing",
-    subtitle: "Leakage & blockage repair",
-    icon: Wrench,
-    color: "from-sky-500 to-blue-600",
-    tags: ["Tap & pipe fix", "Drain cleaning", "Bathroom repair"],
-    desc: "Quick & clean plumbing fixes for homes & offices.",
-    slug: "plumbing",
-  },
-  {
-    name: "Electrical",
-    subtitle: "Wiring & installation",
-    icon: Plug,
-    color: "from-amber-500 to-orange-600",
-    tags: ["Switchboard", "Wiring", "Lighting setup"],
-    desc: "Safe wiring, repair & new fittings by expert electricians.",
-    slug: "electrical",
-  },
-  {
-    name: "Carpentry",
-    subtitle: "Furniture & polish work",
-    icon: Hammer,
-    color: "from-green-500 to-emerald-600",
-    tags: ["Furniture", "Wood polish", "Door fitting"],
-    desc: "Custom furniture, wood polish & modular carpentry work.",
-    slug: "carpentry",
-  },
-  {
-    name: "Interior Design",
-    subtitle: "Home & office design",
-    icon: Home,
-    color: "from-pink-500 to-rose-600",
-    tags: ["2D/3D Design", "Furniture layout", "Lighting plan"],
-    desc: "Modern interior solutions with 3D design & smart planning.",
-    slug: "interior-design",
-  },
-  {
-    name: "Renovation",
-    subtitle: "Complete home makeover",
-    icon: Building,
-    color: "from-slate-600 to-gray-800",
-    tags: ["Civil work", "Finishing", "Redesign"],
-    desc: "Transform your old space with full renovation service.",
-    slug: "renovation",
-  },
-  {
-    name: "Wall Paneling",
-    subtitle: "3D decorative wall panels",
-    icon: Wallpaper,
-    color: "from-cyan-500 to-blue-600",
-    tags: ["Wooden panels", "PVC sheets", "Gypsum design"],
-    desc: "Stylish wall paneling with soundproof & modern textures.",
-    slug: "wall-paneling",
-  },
-  {
-    name: "Packing & Moving",
-    subtitle: "Local & city shifting",
-    icon: Truck,
-    color: "from-orange-400 to-yellow-500",
-    tags: ["Local shifting", "Packing", "Intercity relocation"],
-    desc: "Quick, safe & insured moving services all over India.",
-    slug: "moving",
-  },
-  {
-    name: "Cleaning",
-    subtitle: "Deep cleaning & sanitization",
-    icon: Sparkles,
-    color: "from-lime-400 to-green-500",
-    tags: ["Home cleaning", "Sofa cleaning", "Bathroom cleaning"],
-    desc: "Professional deep cleaning for homes & workplaces.",
-    slug: "cleaning",
-  },
-  {
-    name: "AC Services",
-    subtitle: "Cooling & maintenance",
-    icon: Wind,
-    color: "from-sky-400 to-cyan-500",
-    tags: ["Gas refill", "Servicing", "Installation"],
-    desc: "AC servicing & repair by trained technicians.",
-    slug: "ac-service",
-  },
-  {
-    name: "Appliance Repair",
-    subtitle: "Home electronics",
-    icon: Tv,
-    color: "from-indigo-400 to-blue-500",
-    tags: ["TV", "Fridge", "Washing machine"],
-    desc: "All brands appliance repair with original parts.",
-    slug: "appliance-repair",
-  },
-  {
-    name: "CCTV & Security",
-    subtitle: "Smart camera setup",
-    icon: Shield,
-    color: "from-gray-700 to-black",
-    tags: ["Camera install", "Maintenance", "Security setup"],
-    desc: "Full surveillance setup with motion detection systems.",
-    slug: "cctv",
-  },
-  {
-    name: "Smart Home",
-    subtitle: "Voice & app automation",
-    icon: UserCog,
-    color: "from-purple-400 to-fuchsia-600",
-    tags: ["Alexa setup", "Smart switches", "IoT lighting"],
-    desc: "Transform your home with smart automation & sensors.",
-    slug: "smart-home",
-  },
-  {
-    name: "Decoration",
-    subtitle: "Furniture & lighting decor",
-    icon: Leaf,
-    color: "from-pink-400 to-rose-500",
-    tags: ["Curtains", "Decor setup", "Lighting art"],
-    desc: "Artistic interiors & designer home decor service.",
-    slug: "interior-decoration",
-  },
-  {
-    name: "False Ceiling",
-    subtitle: "POP & gypsum design",
-    icon: Ruler,
-    color: "from-yellow-400 to-amber-500",
-    tags: ["POP design", "LED setup", "Gypsum ceiling"],
-    desc: "Luxury false ceiling with lighting integration.",
-    slug: "false-ceiling",
-  },
-];
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowRight, MessageCircle, Search, Sparkles } from "lucide-react";
+import { popularServices } from "../data/serviceCatalog";
+import ServiceIcon from "./ServiceIcon";
 
 export default function ServicesSection() {
   return (
-    <section id="services" className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-      {/* Light background blur effect */}
-      <div className="absolute top-20 left-40 w-72 h-72 bg-purple-300/30 blur-[120px] rounded-full"></div>
-      <div className="absolute bottom-10 right-40 w-72 h-72 bg-fuchsia-300/30 blur-[120px] rounded-full"></div>
-
-      <div className="max-w-7xl mx-auto text-center mb-12 relative z-10">
-        <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-900 mb-3">
-          Our Services
-        </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto text-base">
-          BlinkUp har ghar ke liye professional home services laata hai — ek app, ek click aur expert at your doorstep!
-        </p>
-      </div>
-
-      {/* Cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 max-w-7xl mx-auto relative z-10">
-        {services.map((s, i) => (
-          <motion.div
-            key={s.name}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: i * 0.05 }}
-            className="relative group"
+    <section id="services" className="bg-[#15101d] pb-24 pt-4">
+      <div className="page-shell">
+        <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="section-kicker">
+              <Sparkles size={13} />
+              Popular in Bhopal
+            </p>
+            <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-[-0.045em] sm:text-5xl">
+              Ghar ke har corner ke liye right expert.
+            </h2>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-[#bdb2c5]">
+              Bas problem bataiye. Hum correct service, free inspection aur
+              work scope confirm karne mein help karenge.
+            </p>
+          </div>
+          <Link
+            href="/services"
+            className="button-secondary self-start px-5 text-sm sm:self-auto"
           >
-            {/* Glow shadow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-fuchsia-500/30 opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-500 rounded-2xl"></div>
+            <Search size={17} />
+            View All Services
+          </Link>
+        </div>
 
-            <Link
-              href={`/services/${s.slug}`}
-              className="relative bg-white/80 backdrop-blur-lg border border-gray-200 shadow-lg hover:shadow-purple-200 rounded-2xl overflow-hidden transition-all duration-500 block"
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {popularServices.map((service, index) => (
+            <motion.article
+              key={service.slug}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: index * 0.04 }}
+              className={`group relative min-h-[22rem] overflow-hidden rounded-[1.75rem] border border-white/10 ${
+                index === 0 ? "sm:col-span-2 lg:col-span-1" : ""
+              }`}
             >
-              {/* Header */}
-              <div className={`bg-gradient-to-r ${s.color} text-white px-6 py-4 flex items-center`}>
-                <s.icon className="w-7 h-7 mr-3 drop-shadow-lg" />
-                <div>
-                  <h3 className="text-lg font-semibold">{s.name}</h3>
-                  <p className="text-sm opacity-90">{s.subtitle}</p>
+              <Image
+                src={service.image}
+                alt={service.imageAlt}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition duration-700 group-hover:scale-[1.04]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#130e19] via-[#130e19]/45 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <span
+                    className="grid h-12 w-12 place-items-center rounded-2xl text-white shadow-xl"
+                    style={{ background: service.accent }}
+                  >
+                    <ServiceIcon name={service.icon} size={23} strokeWidth={2.2} />
+                  </span>
+                  <span className="rounded-full border border-white/15 bg-black/25 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white backdrop-blur">
+                    Free inspection
+                  </span>
                 </div>
+                <h3 className="text-2xl font-bold tracking-[-0.035em]">
+                  {service.name}
+                </h3>
+                <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#ddd4e2]">
+                  {service.shortDescription}
+                </p>
+                <Link
+                  href={`/services/${service.slug}`}
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-white"
+                >
+                  Service dekhein
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </Link>
               </div>
+            </motion.article>
+          ))}
+        </div>
 
-              {/* Body */}
-              <div className="p-6 text-left">
-                <p className="text-gray-700 text-sm mb-4 leading-relaxed">{s.desc}</p>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {s.tags.map((t, i) => (
-                    <span
-                      key={i}
-                      className="bg-purple-50 text-purple-700 border border-purple-100 px-3 py-1 rounded-full text-xs font-medium hover:bg-purple-100 transition-all"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <span className="text-purple-600 text-sm font-medium hover:underline">
-                  Details dekhne ke liye card par click kare →
-                </span>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
+        <div className="app-gradient-soft mt-5 flex flex-col items-start justify-between gap-4 rounded-[1.5rem] px-6 py-6 sm:flex-row sm:items-center">
+          <div>
+            <p className="font-bold">Exact requirement nahi mil rahi?</p>
+            <p className="mt-1 text-sm text-[#e5dbf8]">
+              WhatsApp par problem share kijiye—BlinkUp aapko right service
+              category tak guide karega.
+            </p>
+          </div>
+          <a
+            href="https://wa.me/917489673372?text=Hi%20BlinkUp%2C%20I%27m%20not%20sure%20which%20service%20to%20book."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-[#25d366] px-5 text-sm font-bold text-[#062b15] shadow-lg shadow-[#25d366]/15 transition hover:-translate-y-0.5"
+          >
+            <MessageCircle size={18} />
+            WhatsApp par poochhein
+            <ArrowRight size={17} />
+          </a>
+        </div>
       </div>
     </section>
   );

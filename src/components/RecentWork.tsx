@@ -1,134 +1,75 @@
-'use client';
+import Link from "next/link";
+import {
+  ArrowRight,
+  CalendarCheck2,
+  PhoneCall,
+  Sparkles,
+  Wrench,
+} from "lucide-react";
 
-import { useEffect, useState } from 'react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import Image from 'next/image';
-import { Star } from 'lucide-react';
-
-interface Work {
-  id: string;
-  title: string;
-  desc: string;
-  location: string;
-  rating: number;
-  imageUrl: string;
-  createdAt?: any;
-}
+const steps = [
+  {
+    icon: CalendarCheck2,
+    number: "1",
+    title: "Choose a service",
+    text: "Tell us what you need, your Bhopal address and preferred visit slot.",
+  },
+  {
+    icon: PhoneCall,
+    number: "2",
+    title: "Confirm inspection",
+    text: "Our team confirms the request and assigns a suitable professional.",
+  },
+  {
+    icon: Wrench,
+    number: "3",
+    title: "Approve and begin",
+    text: "Review the quotation after inspection. Work begins after your approval.",
+  },
+];
 
 export default function RecentWork() {
-  const [works, setWorks] = useState<Work[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchWorks = async () => {
-      try {
-        const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
-        const snapshot = await getDocs(q);
-        const worksData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as any),
-        })) as Work[];
-        setWorks(worksData.slice(0, 6)); // sirf latest 6 show
-      } catch (error) {
-        console.error('Error fetching works:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWorks();
-  }, []);
-
-  if (loading) {
-    return (
-      <section className="py-16 bg-gray-50" id="recent-work">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our <span className="text-purple-600">Recent Work</span>
-          </h2>
-          <p className="text-gray-500">Loading recent projects...</p>
-        </div>
-      </section>
-    );
-  }
-
-  if (works.length === 0) {
-    return (
-      <section className="py-16 bg-gray-50" id="recent-work">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our <span className="text-purple-600">Recent Work</span>
-          </h2>
-          <p className="text-gray-400 italic">
-            Abhi tak koi project upload nahi hua. Please add from admin panel.
-          </p>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="py-16 bg-gray-50" id="recent-work">
-      <div className="max-w-7xl mx-auto px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-          Our <span className="text-purple-600">Recent Work</span>
-        </h2>
-        <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
-          BlinkUp ke experts dwara complete kiye gaye latest home service projects —
-          painting, interior, renovation aur aur bhi bahut kuch.
-        </p>
+    <section id="how-it-works" className="bg-[#f4efff] py-20 text-[#201a2b] sm:py-24">
+      <div className="page-shell">
+        <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+          <div>
+            <p className="eyebrow text-[#6d3ae6]">
+              <Sparkles size={15} />
+              Blinku guided booking
+            </p>
+            <h2 className="mt-3 max-w-2xl text-4xl font-bold tracking-[-0.045em] sm:text-5xl">
+              Book in three simple steps.
+            </h2>
+          </div>
+          <Link
+            href="/lead"
+            className="inline-flex items-center gap-2 self-start rounded-2xl bg-[#201a2b] px-5 py-3 font-semibold text-white md:self-auto"
+          >
+            Start booking
+            <ArrowRight size={18} />
+          </Link>
+        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {works.map((work) => (
-            <div
-              key={work.id}
-              className="bg-white shadow-lg rounded-2xl overflow-hidden group hover:shadow-2xl transition-all duration-300"
+        <div className="grid gap-4 lg:grid-cols-3">
+          {steps.map((step) => (
+            <article
+              key={step.number}
+              className="rounded-[1.5rem] bg-[#15101d] p-6 text-white shadow-xl shadow-[#3a245c]/10"
             >
-              <div className="relative h-56 w-full overflow-hidden">
-                <Image
-                  src={work.imageUrl}
-                  alt={work.title}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute top-3 left-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                  📍 {work.location}
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#5535a1] text-[#f0e8ff]">
+                  <step.icon size={22} />
+                </span>
+                <span className="text-sm font-bold text-[#9177ca]">
+                  {step.number}/3
+                </span>
               </div>
-
-              <div className="p-5 text-left">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  {work.title}
-                </h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  {work.desc?.length > 80
-                    ? work.desc.slice(0, 80) + '...'
-                    : work.desc}
-                </p>
-
-                <div className="flex items-center gap-1 text-yellow-400 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      fill={
-                        i < Math.round(work.rating || 5)
-                          ? 'currentColor'
-                          : 'none'
-                      }
-                    />
-                  ))}
-                  <span className="text-gray-600 text-xs ml-1">
-                    ({work.rating || 5})
-                  </span>
-                </div>
-
-                <button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm hover:shadow-md transition">
-                  Book Similar Service
-                </button>
-              </div>
-            </div>
+              <h3 className="mt-9 text-xl font-bold">{step.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-[#c8bece]">
+                {step.text}
+              </p>
+            </article>
           ))}
         </div>
       </div>
