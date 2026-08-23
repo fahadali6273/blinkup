@@ -2,14 +2,9 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const projectId =
-  process.env.FIREBASE_ADMIN_PROJECT_ID ||
-  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ||
-  "blinkup-b42bd";
-
 const membershipEndpoint =
   process.env.FIREBASE_WEBSITE_MEMBERSHIP_URL ||
-  `https://us-central1-${projectId}.cloudfunctions.net/requestWebsiteMembership`;
+  "https://us-central1-blinkup-b42bd.cloudfunctions.net/requestWebsiteMembership";
 
 function cleanText(value: unknown, max: number) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
