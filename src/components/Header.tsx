@@ -9,6 +9,7 @@ import { useState } from "react";
 const navItems = [
   { label: "Home", href: "/", emphasis: true },
   { label: "Services", href: "/services", emphasis: true },
+  { label: "Home AMC", href: "/amc", emphasis: true },
   { label: "How it works", href: "/#how-it-works", emphasis: true },
   { label: "About", href: "/about", emphasis: true },
   { label: "Reviews", href: "/testimonials", emphasis: true },
@@ -47,7 +48,7 @@ export default function Header() {
         </Link>
 
         <nav
-          className="hidden items-center gap-1.5 rounded-2xl border border-white/[0.07] bg-white/[0.035] p-1.5 xl:flex"
+          className="hidden items-center gap-1 rounded-2xl border border-white/[0.07] bg-white/[0.035] p-1.5 xl:flex"
           aria-label="Main navigation"
         >
           {navItems.map((item) => {
@@ -61,7 +62,7 @@ export default function Header() {
                 key={item.label}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`rounded-xl px-3 py-2 text-[13px] transition ${
+                className={`whitespace-nowrap rounded-xl px-2.5 py-2 text-[12px] transition ${
                   active
                     ? "bg-[#6d3ae6] font-bold text-white shadow-lg shadow-[#6d3ae6]/20"
                     : item.emphasis

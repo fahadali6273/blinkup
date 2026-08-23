@@ -75,6 +75,7 @@ export default function Footer() {
             </h3>
             <ul className="mt-5 space-y-3 text-sm text-[#c8bece]">
               <li><Link href="/services" className="transition hover:text-white">All services</Link></li>
+              <li><Link href="/amc" className="transition hover:text-white">Home AMC plans</Link></li>
               <li><Link href="/gallery" className="transition hover:text-white">Work gallery</Link></li>
               <li><Link href="/about" className="transition hover:text-white">About us</Link></li>
               <li><Link href="/testimonials" className="transition hover:text-white">Customer reviews</Link></li>

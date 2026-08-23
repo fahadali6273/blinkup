@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   MessageSquareHeart,
+  ShieldCheck,
   Settings,
   UsersRound,
   X,
@@ -35,6 +36,12 @@ const links = [
     label: "Work gallery",
     description: "Project uploads",
     icon: Images,
+  },
+  {
+    href: "/admin/amc",
+    label: "AMC enquiries",
+    description: "Home-care plan leads",
+    icon: ShieldCheck,
   },
   {
     href: "/admin/testimonials",
