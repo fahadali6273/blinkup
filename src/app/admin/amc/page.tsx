@@ -97,6 +97,14 @@ function statusClass(status: AmcStatus) {
   return "border-amber-300/15 bg-amber-300/[0.08] text-amber-300";
 }
 
+function normalizeAmcStatus(value: unknown): AmcStatus {
+  const status = typeof value === "string" ? value.toLowerCase() : "new";
+  if (status === "contacted" || status === "in progress") return "contacted";
+  if (status === "converted" || status === "completed") return "converted";
+  if (status === "closed" || status === "cancelled") return "closed";
+  return "new";
+}
+
 export default function AdminAmcPage() {
   const [requests, setRequests] = useState<AmcRequest[]>([]);
   const [filter, setFilter] = useState<"all" | AmcStatus>("all");
@@ -111,9 +119,37 @@ export default function AdminAmcPage() {
     setLoading(true);
     setError("");
     try {
-      const snapshot = await getDocs(collection(db, "membershipRequests"));
+      const snapshot = await getDocs(collection(db, "leads"));
       const data = snapshot.docs
-        .map((item) => ({ id: item.id, ...item.data() }) as AmcRequest)
+        .map((item) => ({ id: item.id, ...item.data() }) as Record<string, any>)
+        .filter(
+          (item) =>
+            item.source === "websiteAmcPage" ||
+            item.service === "BlinkUp Home AMC"
+        )
+        .map(
+          (item) =>
+            ({
+              id: item.id,
+              customerName: item.customerName || item.name,
+              customerPhone: item.customerPhone || item.phone,
+              customerEmail: item.customerEmail || item.email,
+              serviceArea:
+                item.serviceArea || item.location || item.address,
+              serviceCity: item.serviceCity || "Bhopal",
+              customerMessage: item.customerMessage || item.message,
+              planCode: item.planCode,
+              planSnapshot:
+                item.planSnapshot || {
+                  name: item.subService || item.service,
+                  offerPricePaise: 0,
+                },
+              source: item.source,
+              status: normalizeAmcStatus(item.status),
+              adminNote: item.adminNote,
+              requestedAt: item.requestedAt || item.createdAt,
+            }) as AmcRequest
+        )
         .sort((a, b) => requestTime(b.requestedAt) - requestTime(a.requestedAt));
       setRequests(data);
     } catch (fetchError) {
@@ -135,13 +171,7 @@ export default function AdminAmcPage() {
       }
 
       try {
-        const token = await user.getIdTokenResult(true);
-        if (token.claims.admin !== true) {
-          setRequests([]);
-          setLoading(false);
-          setError("Is account par Firebase admin access active nahi hai.");
-          return;
-        }
+        await user.getIdToken(true);
         await fetchRequests();
       } catch (authError) {
         console.error("AMC admin authentication failed:", authError);
@@ -187,7 +217,7 @@ export default function AdminAmcPage() {
     setSaving(true);
     setError("");
     try {
-      await updateDoc(doc(db, "membershipRequests", request.id), {
+      await updateDoc(doc(db, "leads", request.id), {
         status,
         adminNote: note.trim() || null,
         updatedAt: serverTimestamp(),

@@ -163,6 +163,11 @@ export default function LeadsPage() {
           id: document.id,
           ...document.data(),
         }))
+        .filter(
+          (lead) =>
+            lead.source !== "websiteAmcPage" &&
+            lead.service !== "BlinkUp Home AMC"
+        )
         .sort((a, b) => getLeadTime(b.createdAt) - getLeadTime(a.createdAt));
 
       setLeads(leadsData);
