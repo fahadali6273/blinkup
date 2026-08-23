@@ -21,7 +21,8 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
-import { db } from "../../../lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../../../lib/firebase";
 
 type AmcStatus = "new" | "contacted" | "converted" | "closed";
 
@@ -124,7 +125,33 @@ export default function AdminAmcPage() {
   }, []);
 
   useEffect(() => {
-    void fetchRequests();
+    setLoading(true);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setRequests([]);
+        setLoading(false);
+        setError("Admin session active nahi hai. Secure logout karke dobara login karein.");
+        return;
+      }
+
+      try {
+        const token = await user.getIdTokenResult(true);
+        if (token.claims.admin !== true) {
+          setRequests([]);
+          setLoading(false);
+          setError("Is account par Firebase admin access active nahi hai.");
+          return;
+        }
+        await fetchRequests();
+      } catch (authError) {
+        console.error("AMC admin authentication failed:", authError);
+        setRequests([]);
+        setLoading(false);
+        setError("Admin session verify nahi hui. Secure logout karke dobara login karein.");
+      }
+    });
+
+    return unsubscribe;
   }, [fetchRequests]);
 
   const counts = useMemo(() => {
